@@ -1,0 +1,54 @@
+name: vite4
+on:
+  push:
+    branches: [ "main' ]
+
+  pull_request:
+
+permissions:
+  contents: write
+
+
+jobs:
+  download-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: download souce code
+        uses: actions/checkout@v4
+
+  setup-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.20.8'
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install dependencies
+        run: npm ci
+
+  build-project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: build react project
+        run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: deploy to github
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+
+
